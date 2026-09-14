@@ -1,0 +1,25 @@
+services:
+  web:
+    build:
+      context: .
+      target: web
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
+        VITE_API_URL: ${VITE_API_URL:-}
+    ports: ["4173:8080"]
+    restart: unless-stopped
+  api:
+    build:
+      context: .
+      target: api
+    env_file: .env
+    ports: ["8787:8787"]
+    restart: unless-stopped
+  worker:
+    build:
+      context: .
+      target: api
+    env_file: .env
+    command: ["npm", "run", "worker"]
+    restart: unless-stopped
